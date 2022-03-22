@@ -10,7 +10,7 @@ from PageSpider.Property import Property
 class PageSpider:
     # 请求页面
     @staticmethod
-    def request_page(url):
+    def request_page(url, text):
         headers = {
             "User-Agent": r"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                           r"Chrome/88.0.4324.150 Safari/537.36",
@@ -29,7 +29,7 @@ class PageSpider:
         # 查找请求参数div_part
         request_data_tr = None
         for each in div_part:
-            if each.h3.text == "请求参数":
+            if each.h3.text == text:
                 request_data_tr = each.find("div", class_="table-wrp").table.tbody
                 break
 
@@ -112,14 +112,18 @@ class PageSpider:
             return False
 
     @staticmethod
-    def deserialize(page_data, name) -> DataClass:
+    def deserialize(page_data, name, chinese_name, comment) -> DataClass:
         res = DataClass()
         res.name = name
+        res.chinese_name = chinese_name
+        res.comment = comment
         res.sub_classes = []
         res.properties = []
 
         is_sub_class = False
         sub_class_name = ""
+        sub_class_chinese_name = ""
+        sub_class_comment = ""
 
         for each in page_data.children:
             if each == "\n":
@@ -132,7 +136,9 @@ class PageSpider:
             # 处理子类型数据
             if is_sub_class:
                 is_sub_class = False
-                res.sub_classes.append(PageSpider.deserialize(each.find("tbody"), sub_class_name))
+                res.sub_classes.append(
+                    PageSpider.deserialize(each.find("tbody"), sub_class_name, sub_class_chinese_name,
+                                           sub_class_comment))
                 continue
 
             td = each.find_all("td")
@@ -141,17 +147,19 @@ class PageSpider:
             curr_property.chinese_name, is_sub_class = PageSpider.convert_chinese_name(td[0].text)
             curr_property.name = PageSpider.convert_name(td[1].text)
             curr_property.type = PageSpider.convert_type(td[2].text)
+            curr_property.nullable = PageSpider.convert_nullable(td[3].text)
+            curr_property.comment = PageSpider.convert_comment(td[4].text)
             if is_sub_class:
                 curr_property.type = PageSpider.format_class_name(curr_property.name)
                 sub_class_name = curr_property.type
+                sub_class_chinese_name = curr_property.chinese_name
+                sub_class_comment = curr_property.comment
             # 处理数组
             if PageSpider.is_array(td[2].text.replace(" ", "")):
                 if is_sub_class:
                     curr_property.type += "[]"
                 else:
                     curr_property.type = "string[]"
-            curr_property.nullable = PageSpider.convert_nullable(td[3].text)
-            curr_property.comment = PageSpider.convert_comment(td[4].text)
 
             # 将当前参数放入类型
             res.properties.append(curr_property)
