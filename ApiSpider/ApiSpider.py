@@ -47,7 +47,7 @@ class ApiSpider:
                                                     "{api_chinese_name}请求数据".format(
                                                         api_chinese_name=api.chinese_name),
                                                     "详细请参考微信支付官方文档: {url}".format(url=url))
-                FileWriter.write_result("/{name}_{index}_RequestData.cs".format(name=name, index=index),
+                FileWriter.write_result("./Entities/RequestData/{name}_{index}_RequestData.cs".format(name=name, index=index),
                                         data_class.parse())
 
             return_json_page = PageSpider.request_page(url, "返回参数")
@@ -57,7 +57,7 @@ class ApiSpider:
                                                     "{api_chinese_name}返回json".format(
                                                         api_chinese_name=api.chinese_name),
                                                     "详细请参考微信支付官方文档: {url}".format(url=url))
-                FileWriter.write_result("/{name}_{index}_ReturnJson.cs".format(name=name, index=index),
+                FileWriter.write_result("./Entities/ReturnJson/{name}_{index}_ReturnJson.cs".format(name=name, index=index),
                                         data_class.parse())
 
 
@@ -68,6 +68,6 @@ class ApiSpider:
                                                     "{api_chinese_name}通知参数".format(
                                                         api_chinese_name=api.chinese_name),
                                                     "详细请参考微信支付官方文档: {url}".format(url=url))
-                FileWriter.write_result("/{name}_{index}_NotifyJson.cs".format(name=name, index=index),
+                FileWriter.write_result("./Entities/NotifyJson/{name}_{index}_NotifyJson.cs".format(name=name, index=index),
                                         data_class.parse())
         pass
