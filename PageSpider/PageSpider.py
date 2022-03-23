@@ -70,7 +70,7 @@ class PageSpider:
         request_data_tr = None
         for each in div_part:
             if not each.h3:
-                break
+                continue
 
             if each.h3.text == text:
                 if not each.find("div", class_="table-wrp"):

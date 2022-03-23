@@ -6,10 +6,9 @@ from PageSpider.PageSpider import PageSpider
 
 def main():
     # res = ApiSpider.url_available("https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_3_13.shtml")
-    # print(res)
-    # res = PageSpider.request_page("https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_3_13.shtml", "请求参数")
-    # if res != "":
-    #     res2 = PageSpider.deserialize(res, "hello", "测试类型", "测试注释")
+    res = PageSpider.request_page("https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_3_2.shtml", "请求参数")
+    if res != "":
+        res2 = PageSpider.deserialize(res, "hello", "测试类型", "测试注释")
 
     # res3 = PageSpider.request_page("https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_3_1.shtml", "通知参数")
     # if res3 != "":
