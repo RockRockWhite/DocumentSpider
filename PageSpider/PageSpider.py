@@ -3,11 +3,41 @@ import bs4
 import requests
 from bs4.element import Comment
 
+from PageSpider.Api import Api
 from PageSpider.DataClass import DataClass
 from PageSpider.Property import Property
 
 
 class PageSpider:
+
+    @staticmethod
+    def get_api_data(url):
+        api = Api()
+        headers = {
+            "User-Agent": r"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                          r"Chrome/88.0.4324.150 Safari/537.36",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        }
+
+        # 发送请求
+        res = requests.get(url=url, headers=headers)
+        res.encoding = "utf-8"
+
+        # 处理请求
+        soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+        api.chinese_name = soup.find("div", class_="overview").h2.text
+        api.comment = soup.find("div", class_="overview").find_all("p")[1].text
+
+        # 查找请求参数div_part
+        div_part = soup.find_all("div", class_="part")
+        for each in div_part:
+            if each.h3.text == "接口说明":
+                api.url = each.find_all("p")[1].text.replace("请求URL：", "").replace(" ", "")
+                api.method = each.find_all("p")[2].text.replace("请求方式：", "").replace(" ", "")
+
+        return api
+
     # 请求页面
     @staticmethod
     def request_page(url, text):

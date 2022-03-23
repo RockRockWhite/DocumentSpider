@@ -20,14 +20,14 @@ class DataClass:
             sub_classes_str += each.parse()
             sub_classes_str += "\n"
         if self.sub_classes:
-            sub_classes_str = " #region 子数据类型\n" + sub_classes_str + "#endregion\n"
+            sub_classes_str = " #region 子数据类型\n" + sub_classes_str + "#endregion"
 
         return ("/// <summary>\n"
                 "/// {chinese_name}\n"
                 "/// {comment}\n"
                 "/// <summary>\n"
                 "public class {name}\n"
-                # "{{\n"
+                "{{\n"
                 # "{constructor}"
                 # "\n"
                 "{properties}\n"
