@@ -32,7 +32,17 @@ class PageSpider:
         # 查找请求参数div_part
         div_part = soup.find_all("div", class_="part")
         for each in div_part:
+            if len(each.find_all("p")) < 3:
+                api.url = ""
+                api.method = ""
+                continue
+
             if each.h3.text == "接口说明":
+                if not each.p:
+                    api.url = ""
+                    api.method = ""
+                    continue
+
                 api.url = each.find_all("p")[1].text.replace("请求URL：", "").replace(" ", "")
                 api.method = each.find_all("p")[2].text.replace("请求方式：", "").replace(" ", "")
 
@@ -59,6 +69,9 @@ class PageSpider:
         # 查找请求参数div_part
         request_data_tr = None
         for each in div_part:
+            if not each.h3:
+                break
+
             if each.h3.text == text:
                 request_data_tr = each.find("div", class_="table-wrp").table.tbody
                 break
