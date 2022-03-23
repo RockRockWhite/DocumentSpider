@@ -73,6 +73,9 @@ class PageSpider:
                 break
 
             if each.h3.text == text:
+                if not each.find("div", class_="table-wrp"):
+                    break
+
                 request_data_tr = each.find("div", class_="table-wrp").table.tbody
                 break
 
@@ -191,7 +194,14 @@ class PageSpider:
             curr_property.name = PageSpider.convert_name(td[1].text)
             curr_property.type = PageSpider.convert_type(td[2].text)
             curr_property.nullable = PageSpider.convert_nullable(td[3].text)
-            curr_property.comment = PageSpider.convert_comment(td[4].text)
+
+            # 评论需要处理 **多选一** 情况
+            if len(td) == 5:
+                curr_property.comment = PageSpider.convert_comment(td[4].text)
+            else:
+                curr_property.comment = PageSpider.convert_comment(td[3].text)
+                curr_property.comment += " 多选一"
+
             if is_sub_class:
                 curr_property.type = PageSpider.format_class_name(curr_property.name)
                 sub_class_name = curr_property.type

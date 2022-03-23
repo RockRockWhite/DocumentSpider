@@ -1,6 +1,7 @@
 import bs4
 import requests
 
+from FileWriter.FileWriter import FileWriter
 from PageSpider.PageSpider import PageSpider
 
 
@@ -39,13 +40,34 @@ class ApiSpider:
             # 获得接口信息
             api = PageSpider.get_api_data(url)
 
-            request_data_page = PageSpider.request_page(url, "通知参数")
+            request_data_page = PageSpider.request_page(url, "请求参数")
             if request_data_page != "":
                 data_class = PageSpider.deserialize(request_data_page,
                                                     "{name}_{index}_RequestData".format(name=name, index=index),
                                                     "{api_chinese_name}请求数据".format(
                                                         api_chinese_name=api.chinese_name),
                                                     "详细请参考微信支付官方文档: {url}".format(url=url))
-                print(data_class)
+                FileWriter.write_result("/{name}_{index}_RequestData.cs".format(name=name, index=index),
+                                        data_class.parse())
 
+            return_json_page = PageSpider.request_page(url, "返回参数")
+            if return_json_page != "":
+                data_class = PageSpider.deserialize(return_json_page,
+                                                    "{name}_{index}_ReturnJson".format(name=name, index=index),
+                                                    "{api_chinese_name}返回json".format(
+                                                        api_chinese_name=api.chinese_name),
+                                                    "详细请参考微信支付官方文档: {url}".format(url=url))
+                FileWriter.write_result("/{name}_{index}_ReturnJson.cs".format(name=name, index=index),
+                                        data_class.parse())
+
+
+            request_notify_page = PageSpider.request_page(url, "通知参数")
+            if request_notify_page != "":
+                data_class = PageSpider.deserialize(request_notify_page,
+                                                    "{name}_{index}_NotifyJson".format(name=name, index=index),
+                                                    "{api_chinese_name}通知参数".format(
+                                                        api_chinese_name=api.chinese_name),
+                                                    "详细请参考微信支付官方文档: {url}".format(url=url))
+                FileWriter.write_result("/{name}_{index}_NotifyJson.cs".format(name=name, index=index),
+                                        data_class.parse())
         pass
