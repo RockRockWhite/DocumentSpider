@@ -10,6 +10,6 @@ class FileWriter:
         if not os.path.isdir(path_dir):
             os.makedirs(path_dir)
 
-        file_to_write = open(path, "x", encoding="utf-8")
+        file_to_write = open(path, "w", encoding="utf-8")
         file_to_write.write(result)
         file_to_write.close()
