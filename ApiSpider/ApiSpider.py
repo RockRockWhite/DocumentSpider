@@ -25,49 +25,50 @@ class ApiSpider:
 
     @staticmethod
     def get_apis(name, url_format):
-
         index = 0
         while True:
-            index += 1
-            url = url_format.format(index=index)
+            try:
+                index += 1
+                url = url_format.format(index=index)
 
-            print(url)
+                print(url)
 
-            # 判断接口时候有效
-            if not ApiSpider.url_available(url):
-                break
+                # 判断接口时候有效
+                if not ApiSpider.url_available(url):
+                    break
 
-            # 获得接口信息
-            api = PageSpider.get_api_data(url)
+                # 获得接口信息
+                api = PageSpider.get_api_data(url)
 
-            request_data_page = PageSpider.request_page(url, "请求参数")
-            if request_data_page != "":
-                data_class = PageSpider.deserialize(request_data_page,
-                                                    "{name}_{index}_RequestData".format(name=name, index=index),
-                                                    "{api_chinese_name}请求数据".format(
-                                                        api_chinese_name=api.chinese_name),
-                                                    "详细请参考微信支付官方文档: {url}".format(url=url))
-                FileWriter.write_result("./Entities/RequestData/{name}_{index}_RequestData.cs".format(name=name, index=index),
-                                        data_class.parse())
+                request_data_page = PageSpider.request_page(url, "请求参数")
+                if request_data_page != "":
+                    data_class = PageSpider.deserialize(request_data_page,
+                                                        "{name}_{index}_RequestData".format(name=name, index=index),
+                                                        "{api_chinese_name}请求数据".format(
+                                                            api_chinese_name=api.chinese_name),
+                                                        "详细请参考微信支付官方文档: {url}".format(url=url))
+                    FileWriter.write_result("./Apis/{name}/Entities/RequestData/{name}_{index}_RequestData.cs".format(name=name, index=index),
+                                            data_class.parse())
 
-            return_json_page = PageSpider.request_page(url, "返回参数")
-            if return_json_page != "":
-                data_class = PageSpider.deserialize(return_json_page,
-                                                    "{name}_{index}_ReturnJson".format(name=name, index=index),
-                                                    "{api_chinese_name}返回json".format(
-                                                        api_chinese_name=api.chinese_name),
-                                                    "详细请参考微信支付官方文档: {url}".format(url=url))
-                FileWriter.write_result("./Entities/ReturnJson/{name}_{index}_ReturnJson.cs".format(name=name, index=index),
-                                        data_class.parse())
+                return_json_page = PageSpider.request_page(url, "返回参数")
+                if return_json_page != "":
+                    data_class = PageSpider.deserialize(return_json_page,
+                                                        "{name}_{index}_ReturnJson".format(name=name, index=index),
+                                                        "{api_chinese_name}返回json".format(
+                                                            api_chinese_name=api.chinese_name),
+                                                        "详细请参考微信支付官方文档: {url}".format(url=url))
+                    FileWriter.write_result("./Apis/{name}/Entities/ReturnJson/{name}_{index}_ReturnJson.cs".format(name=name, index=index),
+                                            data_class.parse())
 
 
-            request_notify_page = PageSpider.request_page(url, "通知参数")
-            if request_notify_page != "":
-                data_class = PageSpider.deserialize(request_notify_page,
-                                                    "{name}_{index}_NotifyJson".format(name=name, index=index),
-                                                    "{api_chinese_name}通知参数".format(
-                                                        api_chinese_name=api.chinese_name),
-                                                    "详细请参考微信支付官方文档: {url}".format(url=url))
-                FileWriter.write_result("./Entities/NotifyJson/{name}_{index}_NotifyJson.cs".format(name=name, index=index),
-                                        data_class.parse())
-        pass
+                request_notify_page = PageSpider.request_page(url, "通知参数")
+                if request_notify_page != "":
+                    data_class = PageSpider.deserialize(request_notify_page,
+                                                        "{name}_{index}_NotifyJson".format(name=name, index=index),
+                                                        "{api_chinese_name}通知参数".format(
+                                                            api_chinese_name=api.chinese_name),
+                                                        "详细请参考微信支付官方文档: {url}".format(url=url))
+                    FileWriter.write_result("./Apis/{name}/Entities/NotifyJson/{name}_{index}_NotifyJson.cs".format(name=name, index=index),
+                                            data_class.parse())
+            except Exception as e:
+                print(e)
