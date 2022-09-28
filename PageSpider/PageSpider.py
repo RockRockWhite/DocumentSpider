@@ -68,16 +68,19 @@ class PageSpider:
 
         # 查找请求参数div_part
         request_data_tr = None
+
         for each in div_part:
             if not each.h3:
                 continue
 
             if each.h3.text == text:
-                if not each.find("div", class_="table-wrp"):
+                if each.find("div", class_="table-wrp"):
+                    request_data_tr = each.find("div", class_="table-wrp").table.tbody
                     break
 
-                request_data_tr = each.find("div", class_="table-wrp").table.tbody
-                break
+                else:
+                    request_data_tr = each.find_all("p")
+                    print(request_data_tr)
 
         if request_data_tr is None:
             return ""
@@ -172,6 +175,7 @@ class PageSpider:
         sub_class_comment = ""
 
         for each in page_data.children:
+            # print(f'each:{each}')
             if each == "\n":
                 continue
 
@@ -218,3 +222,7 @@ class PageSpider:
             res.properties.append(curr_property)
 
         return res
+
+    @staticmethod
+    def deserialize_apis(page_data):
+        pass
