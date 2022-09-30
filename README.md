@@ -5,6 +5,5 @@
 ## 生成 Apis.cs 文件
 
 ```
-cd ./RequestSpider
-python get_requests.py
+python main.py
 ```

@@ -80,7 +80,7 @@ class PageSpider:
 
                 else:
                     request_data_tr = each.find_all("p")
-                    print(request_data_tr)
+                    # print(request_data_tr)
 
         if request_data_tr is None:
             return ""
@@ -198,6 +198,7 @@ class PageSpider:
             curr_property.name = PageSpider.convert_name(td[1].text)
             curr_property.type = PageSpider.convert_type(td[2].text)
             curr_property.nullable = PageSpider.convert_nullable(td[3].text)
+            curr_property.nullable = True
 
             # 评论需要处理 **多选一** 情况
             if len(td) == 5:
@@ -222,7 +223,3 @@ class PageSpider:
             res.properties.append(curr_property)
 
         return res
-
-    @staticmethod
-    def deserialize_apis(page_data):
-        pass
