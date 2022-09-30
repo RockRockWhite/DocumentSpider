@@ -25,7 +25,7 @@ class RegionSpider:
     @staticmethod
     def get_regions(url='https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/index.shtml'):
         if not RegionSpider.url_available(url):
-            print(f'url:{url} 无效')
+            # print(f'url:{url} 无效')
             return
 
         headers = {
@@ -63,5 +63,4 @@ class RegionSpider:
         
         # print(info)
         return info
-
-# RegionSpider.get_regions()
+        
